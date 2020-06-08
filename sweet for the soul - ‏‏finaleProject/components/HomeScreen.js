@@ -1,9 +1,11 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
+
 
 export default function HomeScreen() {
   return (
     <View style={styles.container}>
+      <Image style={styles.image} source={{uri: 'https://images.unsplash.com/photo-1486427944299-d1955d23e34d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80', }} />
       <Text style={styles.sectionText}>
         We are an initiative to relieve loneliness in the company by baking and distributing cakes on weekends
       </Text>
@@ -14,7 +16,7 @@ export default function HomeScreen() {
         Come join us If you want to help us by baking the world a better place!
       </Text>
       <Text style={styles.sectionText}>
-        We currently operate in nine different locations around the country! including:
+        We currently operate in 12 different locations around the country! including:
       </Text>
       <View style={styles.textWrap}>
         <Text style={styles.cities}> Tel-Aviv </Text>
@@ -46,7 +48,8 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '80%',
     fontSize: 16,
-    marginTop: 20
+    marginTop: 20,
+    fontFamily: 'Roboto'
   },
   textWrap: {
     display: 'flex',
@@ -57,8 +60,16 @@ const styles = StyleSheet.create({
     marginTop: 15
   },
   cities: {
+    width: '26%',
     margin: 10,
     fontWeight: '700',
-    fontSize: 14,
+    fontSize: 10,
+    fontFamily: 'monospace',
+    textAlign: 'center'
+  },
+  image: {
+    width: 400, 
+    height: 200, 
+    zIndex: 2
   }
 });

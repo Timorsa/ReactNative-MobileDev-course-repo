@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import Dialog from "react-native-dialog";
 
 export default function MyDeliverysScreen() {
+
   const [mockDeliveyData, setMockDeliveyData] = useState([
     {
       id: '1',
@@ -38,40 +40,74 @@ export default function MyDeliverysScreen() {
       isComplete: false,
       completedAt: undefined
     }
-  ])
+  ]);
+  const [cId, setCId] = useState(0);
+  const [page, setPage] = useState(false);
+  const [name, setName] = useState(undefined);
+  const [address, setAddress] = useState(undefined);
+  const [info, setInfo] = useState(undefined);
+  const [type, setType] = useState(undefined);
+
+
   const deleteTaskClicked = selectedId => {
-    alert(`deleteTaskClicked: ${selectedId}`);
     setMockDeliveyData(mockDeliveyData.filter(item => item.id !== selectedId));
     // API call to update task
     // do somthing bad for the user
+    setPage(false);
   };
   const completeTaskClicked = selectedId => {
-    alert(`deleteTaskClicked: ${selectedId}`);
     setMockDeliveyData(mockDeliveyData.filter(item => item.id !== selectedId));
     // API call to update task
     // do somthing nice for the user
+    setPage(false);
+  };
+  const openPage = selectedId => {
+    setCId(selectedId);
+    let task = mockDeliveyData.filter(item => item.id === selectedId);
+    setName(task[0].receiverName);
+    setAddress(task[0].recieverAddress);
+    setInfo(task[0].info);
+    setType(task[0].type);
+    setPage(true);
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionText}>MyDeliverysScreen page</Text>
+      <Image style={styles.backgroundImage} source={{uri: 'https://images.unsplash.com/photo-1506368083636-6defb67639a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1868&q=80', }} />
+      <Text style={styles.sectionText}>Sweet Deliverys</Text>
       <ScrollView style={styles.scroll}>
         {mockDeliveyData.map((item, i) => (
           <ListItem
-            style={styles.itemStyle}
+            onPress={() => openPage(item.id)}
             key={item.id}
-            leftIcon={<Icon name='thumbs-down' size={50} color='red' style={styles.marginIcon} onPress={() => deleteTaskClicked(item.id)}/>}
-            rightIcon={<Icon name='thumbs-up' size={50} color='green' style={styles.marginIcon} onPress={() => completeTaskClicked(item.id)}/>}
+            leftIcon={<Image style={styles.image} source={{uri: 'https://images.unsplash.com/photo-1486428128344-5413e434ad35?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', }} />}
             title={item.receiverName}
             titleStyle={styles.titleStyle}
-            subtitle={'address: ' + item.recieverAddress + ', info: ' + item.info + ', type: ' + item.type}
+            subtitle={'type: ' + item.type}
             subtitleStyle={styles.subtitleStyle}
             contentContainerStyle={styles.contentStyle}
+            containerStyle={styles.containerStyle}
             topDivider
             pad={30}
           />
         ))}
       </ScrollView>
+      <Dialog.Container visible={page} contentStyle={styles.dialogStyle}>
+        <Image style={styles.dialogImage} source={{uri: 'https://images.unsplash.com/photo-1533910534207-90f31029a78e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60', }} />
+        <Text style={styles.paperHeadText}>{name}</Text>
+        <Text style={styles.paperSectionText}>Address: {address}</Text>
+        <Text style={styles.paperSectionText}>Info: {info}</Text>
+        <Text style={styles.paperSectionText}>Type: {type}</Text>
+        <View style={styles.iconsContainer}>
+          <Icon name='thumbs-down' size={50} color='red' onPress={() => deleteTaskClicked(cId)}/>
+          <Icon name='thumbs-up' size={50} color='green' onPress={() => completeTaskClicked(cId)}/>
+        </View>
+        <View style={styles.textContainer}>
+          <Text style={styles.iconsText}>Remove</Text>
+          <Text style={styles.iconsText}>Delivered</Text>
+        </View>
+        <Dialog.Button label="Cancel" style={{marginTop: 50}} onPress={() => setPage(false)}/>
+      </Dialog.Container>
     </View>
   );
 }
@@ -87,13 +123,13 @@ const styles = StyleSheet.create({
   sectionText: {
     textAlign: 'center',
     width: '80%',
-    fontSize: 16,
+    fontSize: 18,
     marginTop: 20
   },
   contentStyle: {
-    height: 70,
+    height: 60,
     display: 'flex',
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
   },
   titleStyle: {
     fontSize: 18
@@ -106,7 +142,60 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 100
   },
-  itemStyle: {
-    width: '100%'
+  containerStyle: {
+    width: '100%',
+    borderRadius: 10,
+    opacity: 0.8
+  },
+  paperHeadText: {
+    marginTop: 10,
+    marginBottom: 30,
+    textAlign: 'center',
+    fontSize: 26
+  },
+  paperSectionText: {
+    marginTop: 20,
+    marginLeft: 20,
+    textAlign: 'left',
+    fontSize: 18
+  },
+  iconsContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 40,
+    margin: 30
+  },
+  textContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginLeft: 20,
+    marginRight: 20
+  },
+  iconsText: {
+    textAlign: 'left',
+    fontSize: 18
+  },
+  image: {
+    width: 40,
+    height: 40,
+    borderRadius: 50,
+  },
+  backgroundImage: {
+    width: 400, 
+    height: '100%', 
+    position: 'absolute',
+    opacity: 0.2
+  },
+  dialogStyle: {
+    borderRadius: 20,
+    opacity: 0.9
+  },
+  dialogImage: {
+    width: '100%', 
+    height: '110%', 
+    position: 'absolute',
+    opacity: 0.2
   }
 });

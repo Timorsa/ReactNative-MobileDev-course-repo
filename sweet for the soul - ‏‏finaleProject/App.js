@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, SafeAreaView, Platform } from 'react-native';
+import { StyleSheet, Text, View, SafeAreaView, Platform, Image } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons';
 import HomeScreen from './components/HomeScreen';
 import MapScreen from './components/MapScreen';
@@ -7,19 +7,21 @@ import ProfilePage from './components/ProfilePage';
 import InfoScreen from './components/InfoScreen';
 import MyDeliverysScreen from './components/MyDeliverysScreen';
 import { Provider } from 'react-redux'
-import { store } from './redux/redux'
+import store from './redux/store';
 
 export default function App() {
 
   const [navIndicator, setNavIndicator] = useState(0);
-  const [isLoggedIn, setIsLoggedIn] = useState(true); // false by default
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // false by default
 
   return (
     <Provider store={store}>
       <View style={styles.container}>
         <SafeAreaView style={styles.safe} />
         <View style={styles.header}>
-          <View style={styles.logo}><FontAwesome name="birthday-cake" size={30} color="purple" /></View>
+          <View style={styles.logo}>
+            <Image style={styles.image} source={{uri: 'https://images.unsplash.com/photo-1587668178277-295251f900ce?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60', }} />
+          </View>
           <Text style={styles.headerText}>Making Sweet For The Soul</Text>
         </View>
 
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
   header: {
     height: 50,
     width: '100%',
-    backgroundColor: 'pink',
+    backgroundColor: 'palevioletred',
     display: 'flex',
     justifyContent: 'center'
   },
@@ -75,10 +77,16 @@ const styles = StyleSheet.create({
     left: 7,
     top: 9,
   },
+  image: {
+    width: 35,
+    height: 35,
+    borderRadius: 50,
+  },
   headerText: {
     textAlign: 'center',
-    color: 'purple',
+    color: 'white',
     fontSize: 20,
+    fontWeight: '700',
   },
   nav: {
     height: 50,

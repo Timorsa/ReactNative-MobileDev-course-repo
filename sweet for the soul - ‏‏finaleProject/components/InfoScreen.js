@@ -1,10 +1,12 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Linking, Image } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export default function InfoScreen() {
+  
   return (
     <View style={styles.container}>
+      <Image style={styles.image} source={{uri: 'https://images.unsplash.com/photo-1506368083636-6defb67639a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1868&q=80', }} />
       <Text style={styles.sectionText}>
         Sweet for the soul is a Volunteer Social Initiative to Relieve Loneliness in Society 
         by Baking and Distributing Cakes for People Who Need a Sweet Weekend - Holocaust Survivors, 
@@ -20,8 +22,8 @@ export default function InfoScreen() {
         Feel free to cantact us any time:
       </Text>
       <View style={styles.flexRow}>
-        <Icon name='envelope-o' size={44} style={styles.icon}/>
-        <Text style={styles.flexText}>support@sweetSoul.com</Text>
+        <Icon name='envelope-o' size={44} style={styles.icon} onPress={() => Linking.openURL('mailto:support@sweetSoul.com')}/>
+        <Text style={styles.flexText} onPress={() => Linking.openURL('mailto:support@sweetSoul.com')}>support@sweetSoul.com</Text>
       </View>
       <View style={styles.flexRow}>
         <Icon name='whatsapp' size={50} color='#25D366'style={styles.icon}/>
@@ -32,7 +34,7 @@ export default function InfoScreen() {
       </Text>
       <View style={styles.flexCenteredRow}>
         <Icon name='twitter' size={50} color='#00acee' style={styles.marginIcon}/>
-        <Icon name='facebook' size={44} color='#3b5998' style={styles.marginIcon}/>
+        <Icon name='facebook' size={44} color='#3b5998' style={styles.marginIcon} onPress={() => Linking.openURL('https://www.facebook.com/itosh7')}/>
         <Icon name='instagram' size={50} color='#c13584' style={styles.marginIcon}/>
       </View>
     </View>
@@ -56,9 +58,10 @@ const styles = StyleSheet.create({
   contsctText: {
     textAlign: 'center',
     width: '80%',
-    fontSize: 18,
+    fontSize: 16,
     marginTop: 30,
-    fontWeight: '700'
+    fontWeight: '700',
+    fontFamily: 'monospace',
   },
   flexRow: {
     display: 'flex',
@@ -67,7 +70,8 @@ const styles = StyleSheet.create({
   },
   flexText: {
     marginTop: 23,
-    width: '80%'
+    width: '80%',
+    fontFamily: 'monospace',
   },
   icon: {
     margin: 10
@@ -80,5 +84,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-evenly',
     width: '80%',
+  },
+  image: {
+    width: 400, 
+    height: '100%', 
+    position: 'absolute',
+    opacity: 0.2
   }
 });
