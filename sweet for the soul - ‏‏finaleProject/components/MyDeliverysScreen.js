@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, ScrollView, Image } from 'react-native';
 import { ListItem } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Dialog from "react-native-dialog";
+import { connect } from 'react-redux';
 
-export default function MyDeliverysScreen() {
-
+function MyDeliverysScreen(props) {
+  const { user } = props;
   const [mockDeliveyData, setMockDeliveyData] = useState([
     {
       id: '1',
@@ -48,22 +49,28 @@ export default function MyDeliverysScreen() {
   const [info, setInfo] = useState(undefined);
   const [type, setType] = useState(undefined);
 
+  // useEffect(() => {
+  //   fetchData(); get all user open deliverys and set them insted of mockDeliveyData
+  // }, [])
 
-  const deleteTaskClicked = selectedId => {
+  const deleteTaskClicked = async (selectedId) => {
+    // selectedId the the deliveryId for the API call
     setMockDeliveyData(mockDeliveyData.filter(item => item.id !== selectedId));
-    // API call to update task
+    // API call to update task, delete userId from delivery
     // do somthing bad for the user
     setPage(false);
   };
-  const completeTaskClicked = selectedId => {
+  const completeTaskClicked = async (selectedId) => {
+    // selectedId the the deliveryId for the API call
     setMockDeliveyData(mockDeliveyData.filter(item => item.id !== selectedId));
-    // API call to update task
+    // API call to complete delivery
+    // API call to increment user deliverys number, userId = user.userId
     // do somthing nice for the user
     setPage(false);
   };
-  const openPage = selectedId => {
+  const openPage = async (selectedId) => {
     setCId(selectedId);
-    let task = mockDeliveyData.filter(item => item.id === selectedId);
+    let task = await mockDeliveyData.filter(item => item.id === selectedId);
     setName(task[0].receiverName);
     setAddress(task[0].recieverAddress);
     setInfo(task[0].info);
@@ -199,3 +206,9 @@ const styles = StyleSheet.create({
     opacity: 0.2
   }
 });
+
+const mapStateToProps = (state) => ({
+  user: state.user.user
+});
+
+export default connect(mapStateToProps)(MyDeliverysScreen)
