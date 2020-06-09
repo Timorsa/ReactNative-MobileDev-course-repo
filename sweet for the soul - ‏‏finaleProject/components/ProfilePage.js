@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { StyleSheet, Text, View, Image, ActivityIndicator } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Input, Button } from 'react-native-elements';
 import { connect } from 'react-redux';
@@ -16,13 +16,14 @@ const mockUser = {
 }
 
 function ProfilePage(props) {
-  const { isLoggedIn, setIsLoggedIn, setNavIndicator, user } = props;
+  const { isLoggedIn, setIsLoggedIn, user } = props;
   const [userName, setUserName] = useState(undefined);
   const [userPhone, setUserPhone] = useState(undefined);
   const [userAddress, setUserAddress] = useState(undefined);
   const [userEmail, setUserEmail] = useState(undefined);
   const [userPassword, setUserPassword] = useState(undefined);
   const [form, setForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const changeUserName = val => {
     setUserName(val);
@@ -40,20 +41,28 @@ function ProfilePage(props) {
     setUserPassword(val);
   };
   const authenticateUser = async () => {
+    setIsLoading(true);
     if(!form) {
       // authenticate from db using email & password, returning user object 
-      // alert(`email: ${userEmail}, password: ${userPassword}`);
-      setIsLoggedIn(true);
+      // if authenticate successfuly save the user object in redux -> await props.setUser(user) -> setIsLoggedIn(true);
+      // if authentication failed alert the user for wrong credentials;
     } else {
       // create new user, returning user object 
-      // alert(`name: ${userName}, phone: ${userPhone}, email: ${userEmail}, password: ${userPassword}, address: ${userAddress}`);
-      setIsLoggedIn(true);
+      // if user created successfuly save the user object in redux -> await props.setUser(user) -> setIsLoggedIn(true);
+      // if authentication failed alert the user for wrong credentials;
     }
     await props.setUser(mockUser);
+    setIsLoggedIn(true);
+    setIsLoading(false);
   };
 
   return (
     <View style={styles.container}>
+      {isLoading && <View styles={styles.indicator}>
+          <ActivityIndicator size={100} color="#8b0000" />
+          <Text style={styles.indicatorText}> waiting for authenticatation... </Text>
+        </View>
+      }
       <Image style={styles.image} source={{uri: 'https://images.unsplash.com/photo-1506368083636-6defb67639a7?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1868&q=80', }} />
       {!isLoggedIn && <View style={styles.content}>
         <Text style={styles.headText}>Let's start sweetening the world</Text>
@@ -167,6 +176,14 @@ const styles = StyleSheet.create({
     height: '100%', 
     position: 'absolute',
     opacity: 0.2
+  },
+  indicator: {
+    marginTop: 130
+  },
+  indicatorText: {
+    textAlign: 'center',
+    marginTop: 40,
+    fontSize: 30
   }
 });
 
