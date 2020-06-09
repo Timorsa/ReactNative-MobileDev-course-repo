@@ -7,9 +7,10 @@ import flagBlueImg from '../assets/flag-blue.png';
 import flagPinkImg from '../assets/flag-pink.png';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import Dialog from "react-native-dialog";
+import { connect } from 'react-redux';
 
-export default function MapScreen() {
-
+function MapScreen(props) {
+  const { user } = props;
   const [mockDeliveyData, setMockDeliveyData] = useState([
     {
       id: '1',
@@ -57,16 +58,20 @@ export default function MapScreen() {
       }
     }
   ])
-  const [isLoading, setIsLoading] = useState(true)
-  const [location, setLocation] = useState(undefined)
-  const [geocode, setGeocode] = useState(undefined)
-  const [errorMessage, setErrorMessage] = useState(undefined)
+  const [isLoading, setIsLoading] = useState(true);
+  const [location, setLocation] = useState(undefined);
+  const [geocode, setGeocode] = useState(undefined);
+  const [errorMessage, setErrorMessage] = useState(undefined);
   const [cId, setCId] = useState(0);
-  const [page, setPage] = useState(false)
-  const [name, setName] = useState(undefined)
-  const [address, setAddress] = useState(undefined)
-  const [info, setInfo] = useState(undefined)
-  const [type, setType] = useState(undefined)
+  const [page, setPage] = useState(false);
+  const [name, setName] = useState(undefined);
+  const [address, setAddress] = useState(undefined);
+  const [info, setInfo] = useState(undefined);
+  const [type, setType] = useState(undefined);
+
+  // useEffect(() => {
+  //   fetchData(); get all open deliverys and set them insted of mockDeliveyData
+  // }, [])
 
   const openPage = (selectedId) => {
     setCId(selectedId);
@@ -76,11 +81,12 @@ export default function MapScreen() {
     setInfo(task[0].info)
     setType(task[0].type)
     setPage(true)
-  }
+  };
 
-  const assignTaskClicked = selectedId => {
+  const assignTaskClicked = async (selectedId) => {
+    // selectedId the deliveryId for the API call
     setMockDeliveyData(mockDeliveyData.filter(item => item.id !== selectedId));
-    // API call to update task
+    // API call to assign delivery userId = user.userId
     // do somthing good for the user
     setPage(false);
   };
@@ -88,26 +94,26 @@ export default function MapScreen() {
   const getGeocodeAsync = async (location) => {
     const geocode = await Location.reverseGeocodeAsync(location)
     setGeocode({ geocode })
-  }
+  };
 
   const getLocationAsync = async () => {
     const { status } = await Permissions.askAsync(Permissions.LOCATION)
     if (status !== 'granted') {
       setErrorMessage('Permission to access location was denied')
-    }
+    };
 
     const location = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest })
     const { latitude, longitude } = location.coords
     await getGeocodeAsync({ latitude, longitude })
     setLocation({ latitude, longitude })
     setIsLoading(false)
-  }
+  };
 
   useEffect(() => {
     if (location === undefined) {
       getLocationAsync()
     }
-  }, [location])
+  }, [location]);
 
   return (
     <View>
@@ -167,7 +173,7 @@ export default function MapScreen() {
       </Dialog.Container>
     </View>
   )
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -243,4 +249,10 @@ const styles = StyleSheet.create({
     position: 'absolute',
     opacity: 0.2
   }
-})
+});
+
+const mapStateToProps = (state) => ({
+  user: state.user.user
+});
+
+export default connect(mapStateToProps)(MapScreen)
